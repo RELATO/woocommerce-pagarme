@@ -79,7 +79,7 @@ if ( ! class_exists( 'WC_Pagarme' ) ) :
 			include_once dirname( __FILE__ ) . '/includes/class-wc-pagarme-my-account.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-pagarme-banking-ticket-gateway.php';
 			include_once dirname( __FILE__ ) . '/includes/class-wc-pagarme-credit-card-gateway.php';
-			include_once dirname( __FILE__ ) . '/includes/class-wc-pagarme-credit-card1-gateway.php';
+			include_once dirname( __FILE__ ) . '/includes/class-wc-pagarme-credit-card-a-vista-gateway.php';
 		}
 
 		/**
@@ -108,7 +108,7 @@ if ( ! class_exists( 'WC_Pagarme' ) ) :
 		public function add_gateway( $methods ) {
 			$methods[] = 'WC_Pagarme_Banking_Ticket_Gateway';
 			$methods[] = 'WC_Pagarme_Credit_Card_Gateway';
-			$methods[] = 'WC_Pagarme_Credit_Card1_Gateway';
+			$methods[] = 'WC_Pagarme_Credit_Card_A_Vista_Gateway';
 
 			return $methods;
 		}
@@ -125,13 +125,13 @@ if ( ! class_exists( 'WC_Pagarme' ) ) :
 
 			$banking_ticket = 'wc_pagarme_banking_ticket_gateway';
 			$credit_card    = 'wc_pagarme_credit_card_gateway';
-			$credit_card1   = 'wc_pagarme_credit_card1_gateway';
+			$credit_card_a_vista = 'wc_pagarme_credit_card_a_vista_gateway';
 
 			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $banking_ticket ) ) . '">' . __( 'Bank Slip Settings', 'woocommerce-pagarme' ) . '</a>';
 
 			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $credit_card ) ) . '">' . __( 'Credit Card Settings', 'woocommerce-pagarme' ) . '</a>';
 
-			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $credit_card1 ) ) . '">' . __( 'Credit Card 1x Settings', 'woocommerce-pagarme' ) . '</a>';
+			$plugin_links[] = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . $credit_card_a_vista ) ) . '">' . __( 'A Vista Settings', 'woocommerce-pagarme' ) . '</a>';
 
 			return array_merge( $plugin_links, $links );
 		}
@@ -176,10 +176,9 @@ if ( ! class_exists( 'WC_Pagarme' ) ) :
 						'debug'                => $old_options['debug'],
 					);
 
-					// Credit card options.
-					$credit_card1 = array(
+					$credit_card_a_vista = array(
 						'enabled'              => $old_options['enabled'],
-						'title'                => 'Cartão de crédito 1x',
+						'title'                => 'Cartão de crédito à Vista',
 						'description'          => '',
 						'api_key'              => $old_options['api_key'],
 						'encryption_key'       => $old_options['encryption_key'],
@@ -191,10 +190,9 @@ if ( ! class_exists( 'WC_Pagarme' ) ) :
 						'debug'                => $old_options['debug'],
 					);
 
-
 					update_option( 'woocommerce_pagarme-banking-ticket_settings', $banking_ticket );
 					update_option( 'woocommerce_pagarme-credit-card_settings', $credit_card );
-					update_option( 'woocommerce_pagarme-credit-card1_settings', $credit_card1 );
+					update_option( 'woocommerce_pagarme-credit-card-a-vista_settings', $credit_card_a_vista );
 
 					delete_option( 'woocommerce_pagarme_settings' );
 				}

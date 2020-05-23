@@ -493,10 +493,6 @@ msgstr ""
 msgid "Credit Card Settings"
 msgstr ""
 
-#: woocommerce-pagarme.php:134
-msgid "Credit Card 1x Settings"
-msgstr "Cartão de Credito 1x"
-
 #. Plugin Name of the plugin/theme
 msgid "Pagar.me for WooCommerce"
 msgstr ""

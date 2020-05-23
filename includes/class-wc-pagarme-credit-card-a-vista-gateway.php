@@ -10,20 +10,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WC_Pagarme_Credit_Card1_Gateway class.
+ * WC_Pagarme_Credit_Card_Gateway class.
  *
  * @extends WC_Payment_Gateway
  */
-class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
+class WC_Pagarme_Credit_Card_A_Vista_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * Constructor for the gateway.
 	 */
 	public function __construct() {
-		$this->id                   = 'pagarme-credit-card1';
+		$this->id                   = 'pagarme-credit-card-a-vista';
 		$this->icon                 = apply_filters( 'wc_pagarme_credit_card_icon', false );
 		$this->has_fields           = true;
-		$this->method_title         = __( 'Pagar.me - Credit Card 1x', 'woocommerce-pagarme' );
+		$this->method_title         = __( 'Pagar.me - A Vista', 'woocommerce-pagarme' );
 		$this->method_description   = __( 'Accept credit card payments using Pagar.me.', 'woocommerce-pagarme' );
 		$this->view_transaction_url = 'https://dashboard.pagar.me/#/transactions/%s';
 
@@ -59,7 +59,7 @@ class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
 		add_action( 'wp_enqueue_scripts', array( $this, 'checkout_scripts' ) );
 		add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 		add_action( 'woocommerce_email_after_order_table', array( $this, 'email_instructions' ), 10, 3 );
-		add_action( 'woocommerce_api_wc_pagarme_credit_card1_gateway', array( $this, 'ipn_handler' ) );
+		add_action( 'woocommerce_api_wc_pagarme_credit_card_gateway', array( $this, 'ipn_handler' ) );
 	}
 
 	/**
@@ -78,7 +78,7 @@ class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
 		return parent::is_available() && ! empty( $this->api_key ) && ! empty( $this->encryption_key ) && $this->api->using_supported_currency();
 	}
 
-/**
+	/**
 	 * Settings fields.
 	 */
 	public function init_form_fields() {
@@ -232,15 +232,15 @@ class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
 				$customer = array();
 
 				wp_enqueue_script( 'pagarme-checkout-library', $this->api->get_checkout_js_url(), array( 'jquery' ), null );
-				wp_enqueue_script( 'pagarme-checkout', plugins_url( 'assets/js/checkout' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'jquery-blockui', 'pagarme-checkout-library' ), WC_Pagarme::VERSION, true );
+				wp_enqueue_script( 'pagarme-checkout-a-vista', plugins_url( 'assets/js/checkout-avista.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'jquery-blockui', 'pagarme-checkout-library' ), WC_Pagarme::VERSION, true );
 
 				if ( is_checkout_pay_page() ) {
 					$customer = $this->api->get_customer_data_from_checkout_pay_page();
 				}
 
 				wp_localize_script(
-					'pagarme-checkout',
-					'wcPagarmeParams',
+					'pagarme-checkout-a-vista',
+					'wcPagarmeParams2',
 					array(
 						'encryptionKey'          => $this->encryption_key,
 						'interestRate'           => $this->api->get_interest_rate(),
@@ -253,13 +253,13 @@ class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
 					)
 				);
 			} else {
-				wp_enqueue_script( 'wc-credit-card-form' );
-				wp_enqueue_script( 'pagarme-library', $this->api->get_js_url(), array( 'jquery' ), null );
-				wp_enqueue_script( 'pagarme-credit-card', plugins_url( 'assets/js/credit-card' . $suffix . '.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'jquery-blockui', 'pagarme-library' ), WC_Pagarme::VERSION, true );
+				wp_enqueue_script( 'wc-credit-card-a-vista-form' );
+				wp_enqueue_script( 'pagarme-library-a-vista', $this->api->get_js_url(), array( 'jquery' ), null );
+				wp_enqueue_script( 'pagarme-credit-card-a-vista', plugins_url( 'assets/js/avista.js', plugin_dir_path( __FILE__ ) ), array( 'jquery', 'jquery-blockui', 'pagarme-library' ), WC_Pagarme::VERSION, true );
 
 				wp_localize_script(
-					'pagarme-credit-card',
-					'wcPagarmeParams',
+					'pagarme-credit-card-a-vista',
+					'wcPagarmeParams2',
 					array(
 						'encryptionKey' => $this->encryption_key,
 					)
@@ -282,7 +282,7 @@ class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
 			$installments = $this->api->get_installments( $cart_total );
 
 			wc_get_template(
-				'credit-card1/payment-form.php',
+				'credit-card-a-vista/payment-form.php',
 				array(
 					'cart_total'           => $cart_total,
 					'max_installment'      => $this->max_installment,
@@ -322,7 +322,7 @@ class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
 
 		if ( isset( $data['installments'] ) && in_array( $order->get_status(), array( 'processing', 'on-hold' ), true ) ) {
 			wc_get_template(
-				'credit-card1/payment-instructions.php',
+				'credit-card-a-vista/payment-instructions.php',
 				array(
 					'card_brand'   => $data['card_brand'],
 					'installments' => $data['installments'],
@@ -353,7 +353,7 @@ class WC_Pagarme_Credit_Card1_Gateway extends WC_Payment_Gateway {
 			$email_type = $plain_text ? 'plain' : 'html';
 
 			wc_get_template(
-				'credit-card1/emails/' . $email_type . '-instructions.php',
+				'credit-card-a-vista/emails/' . $email_type . '-instructions.php',
 				array(
 					'card_brand'   => $data['card_brand'],
 					'installments' => $data['installments'],

@@ -341,9 +341,9 @@ class WC_Pagarme_API {
 					$data['amount'] = $installment['amount'];
 				}
 			}
-		} elseif ( 'pagarme-credit-card1' === $this->gateway->id ) {
+		} elseif( 'pagarme-credit-card-a-vista' === $this->gateway->id ) {
 			if ( isset( $posted['pagarme_card_hash'] ) ) {
-				$data['payment_method'] = 'credit_card1';
+				$data['payment_method'] = 'credit_card';
 				$data['card_hash']      = $posted['pagarme_card_hash'];
 			}
 
@@ -355,7 +355,8 @@ class WC_Pagarme_API {
 			$_installment = $should_set_default_installment ? 1 : $posted['pagarme_installments'];
 
 			// Validate the installments.
-			$data['installments'] = $_installment;
+			// $data['installments'] = $_installment;
+			$data['installments'] = 1;
 			// Get installments data.
 			$installments = $this->get_installments( $order->get_total() );
 			if ( isset( $installments[ $_installment ] ) ) {

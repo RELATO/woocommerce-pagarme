@@ -10,7 +10,7 @@
 			return openCheckout();
 		} );
 
-		$( 'form.checkout' ).on( 'checkout_place_order_pagarme-credit-card', {
+		$( 'form.checkout' ).on( 'checkout_place_order_pagarme-credit-card-a-vista', {
 			preservePagarmeCheckoutSubmitValue: true
 		}, isCheckoutInvalid );
 
@@ -65,7 +65,7 @@
 				return true;
 			}
 
-			if ( ! $( '#payment_method_pagarme-credit-card' ).is( ':checked' ) ) {
+			if ( ! $( '#payment_method_pagarme-credit-card-a-vista' ).is( ':checked' ) ) {
 				return true;
 			}
 
@@ -243,7 +243,7 @@
 
 			// Set params.
 			params = $.extend({}, {
-				paymentMethods:   'credit_card',
+				paymentMethods:   'credit_card_a_vista',
 				customerData:     false,
 				amount:           inline_data.data( 'total' ),
 				createToken:      shouldCreateToken,
